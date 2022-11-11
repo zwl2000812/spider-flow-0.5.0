@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root" defaultValue="DEBUG"/>
+    <springProperty scope="context" name="WORKSPACE" source="spider.workspace" defaultValue="/data/spider/logs"/>
+    <!-- 控制台输出 -->
+    <appender name="Stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg %n</pattern>
+        </encoder>
+    </appender>
+    <!-- 输出日志文件 -->
+    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger -%msg %n</pattern>
+        </encoder>
+        <file>${WORKSPACE}/log/spider-flow.log</file>
+        <!-- 按照固定窗口模式生成日志文件，当文件大于50MB时，生成新的日志文件。窗口大小是1到10，当保存了10个归档文件后，将覆盖最早的日志。   -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${WORKSPACE}/log/spider-flow-%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
+        </rollingPolicy>
+        <!-- 查看当前活动文件的大小，如果超过指定大小会告知RollingFileAppender 触发当前活动文件滚动   -->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+    <!-- WebSocket输出日志 -->
+    <appender name="WebSocket" class="org.spiderflow.logback.SpiderFlowWebSocketAppender"/>
+    <!-- 日志输出级别 -->
+    <root level="${LOG_LEVEL}">
+        <appender-ref ref="Stdout"/>
+        <appender-ref ref="File"/>
+        <appender-ref ref="WebSocket"/>
+    </root>
+</configuration>
