@@ -164,8 +164,7 @@ public class SpiderFlowThreadPoolExecutor {
 			}
 			synchronized (submitStrategy){
 				//通知继续从集合中取任务提交到线程池中
-				submitStrategy.notifyAll();
-
+			submitStrategy.notifyAll();
 			}
 			return future;
 		}

@@ -108,6 +108,7 @@ public class Spider {
 	 */
 	private void executeRoot(SpiderNode root, SpiderContext context, Map<String, Object> variables) {
 		//获取当前流程执行线程数
+		System.out.println("执行根节点");
 		int nThreads = NumberUtils.toInt(root.getStringJsonValue(ShapeExecutor.THREAD_COUNT), defaultThreads);
 		String strategy = root.getStringJsonValue("submit-strategy");
 		ThreadSubmitStrategy submitStrategy;
@@ -131,8 +132,10 @@ public class Spider {
 		}
 		Comparator<SpiderNode> comparator = submitStrategy.comparator();
 		//启动一个线程开始执行任务,并监听其结束并执行下一级
+		System.out.println("开始执行子任务 ------------------");
 		Future<?> f = pool.submitAsync(TtlRunnable.get(() -> {
 			try {
+				System.out.println("开始执行具体节点");
 				//执行具体节点
 				Spider.this.executeNode(null, root, context, variables);
 				Queue<Future<?>> queue = context.getFutureQueue();
@@ -179,8 +182,10 @@ public class Spider {
 			}
 		}), null, root);
 		try {
+			System.out.println("开始等待");
 			f.get();	//阻塞等待所有任务执行完毕
 		} catch (InterruptedException | ExecutionException ignored) {}
+		System.out.println("结束等待");
 	}
 
 	/**
@@ -245,7 +250,7 @@ public class Spider {
 						loopEnd = Math.max(loopEnd + end + 1,0);
 					}
 				}
-				logger.info("获取循环次数{}={}", loopCountStr, loopCount);
+				logger.debug("获取循环次数{}={}", loopCountStr, loopCount);
 			} catch (Throwable t) {
 				loopCount = 0;
 				logger.error("获取循环次数失败,异常信息：{}", t);
