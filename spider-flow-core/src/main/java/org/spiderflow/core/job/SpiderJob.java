@@ -110,65 +110,15 @@ public class SpiderJob extends QuartzJobBean {
                 String s = String.valueOf(String.valueOf(need_replace_value).replace("\"", "&quot;"));
                 xml_test1 = xml_test1.replace(s, String.valueOf(last_replace_string).replace(" \"", "\""));
 
-                logger.info(s);
-                logger.info(String.valueOf(String.valueOf(last_replace_string)));
-//                logger.info(xml_test1);
                 flow.setXml(xml_test1);
                 break;
             }
         }
 //        System.out.println("run之前**************************************************************************");
 //        System.out.println(json.get("spidername"));
-//        System.out.println("run之前**************************************************************************");
         run(flow, null);
     }
 
-    //老板
-//    public void run(String id, String ip, String spidername) {
-//        QueryWrapper<SpiderFlow> sectionQueryWrapper;
-//        SpiderFlow flow;
-//        if(id == null){
-//            sectionQueryWrapper = new QueryWrapper<SpiderFlow>().eq("name", spidername);
-//            flow = spiderFlowService.list(sectionQueryWrapper).get(0);
-//            System.out.println(spiderFlowService.list(sectionQueryWrapper).get(0));
-//        }
-//        else{
-//            flow = spiderFlowService.getById(id);
-//        }
-//        if (ip != null) {
-//            String test1 = flow.getXml();
-//            test1 = test1.replace("192.168.80.241", ip);
-//            flow.setXml(test1);
-//        }
-//        String xml_test1 = flow.getXml();
-//        if (xml_test1.contains(".csv")){
-////            String[] list_split_string = xml_test1.split("\\.csv");
-//            xml_test1 = xml_test1.replace(".csv", new Date().getTime() + ".csv");
-//            flow.setXml(xml_test1);
-////            flow.setXml(list_split_string[0] + new Date().getTime() + ".csv" + list_split_string[1]);
-////            System.out.println(flow.getXml());
-////            System.out.println("结束");
-//        }
-//        SpiderNode root = SpiderFlowUtils.loadXMLFromString(flow.getXml());
-//        System.out.println("hello");
-//
-////        System.out.println(root.getNextNodes());
-//        for (SpiderNode nextNode : root.getNextNodes()) {
-//
-//            System.out.println(nextNode.getNextNodes());
-////            System.out.println(nextNode.getNextNodes().get(0));
-//            SpiderNode test = nextNode.getNextNodes().get(0);
-//            System.out.println("hello");
-//            System.out.println(test.jsonProperty);
-//            System.out.println(test.jsonProperty.get("variable-name"));
-//            List<String>  test111 = (List<String>) test.jsonProperty.get("variable-name");
-////            for (int i =0 ; i< test111.toArray().length; i++){
-////            }
-//            break;
-//        }
-//
-////        run(flow, null);
-//    }
     public void run(SpiderFlow spiderFlow, Date nextExecuteTime) {
         Task task = new Task();
         task.setBeginTime(new Date());

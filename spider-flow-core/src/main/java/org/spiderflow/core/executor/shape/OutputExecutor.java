@@ -195,11 +195,13 @@ public class OutputExecutor implements ShapeExecutor, SpiderListener {
             for (int i = 0; i < headers.length; i++) {
                 records.add(data.get(headers[i]).toString());
             }
-            synchronized (cachePrinter) {
-                printer.printRecord(records);
-//                printer.flush();
-//                printer.close();
-            }
+            printer.printRecord(records);
+//            synchronized (cachePrinter) {
+//                System.out.println(records);
+//                printer.printRecord(records);
+////                printer.flush();
+////                printer.close();
+//            }
         } catch (IOException e) {
             logger.error("文件输出错误,异常信息:{}", e.getMessage(), e);
             ExceptionUtils.wrapAndThrow(e);
