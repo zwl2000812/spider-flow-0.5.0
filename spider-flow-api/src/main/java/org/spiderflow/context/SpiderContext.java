@@ -49,7 +49,7 @@ public class SpiderContext extends HashMap<String, Object>{
 	 * Cookie上下文
 	 */
 	private CookieContext cookieContext = new CookieContext();
-
+	public Integer taskId = null;
 	public List<SpiderOutput> getOutputs() {
 		return Collections.emptyList();
 	}
@@ -69,6 +69,10 @@ public class SpiderContext extends HashMap<String, Object>{
 
 	public void setFlowId(String flowId) {
 		this.flowId = flowId;
+	}
+
+	public void setTaskId(Integer taskId){
+		this.taskId = taskId;
 	}
 
 	public LinkedBlockingQueue<Future<?>> getFutureQueue() {

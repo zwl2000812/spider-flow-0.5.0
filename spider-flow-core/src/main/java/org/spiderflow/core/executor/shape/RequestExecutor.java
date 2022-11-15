@@ -122,23 +122,23 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                 Object value = ExpressionUtils.execute(sleepCondition, variables);
                 if (value != null) {
                     long sleepTime = NumberUtils.toLong(value.toString(), 0L);
-//                    synchronized (node.getNodeId().intern()) {
-                    //实际等待时间 = 上次执行时间 + 睡眠时间 - 当前时间
-                    Long lastExecuteTime = context.get(LAST_EXECUTE_TIME + node.getNodeId(), 0L);
-                    if (lastExecuteTime != 0) {
-                        sleepTime = lastExecuteTime + sleepTime - System.currentTimeMillis();
-                    }
-                    if (sleepTime > 0) {
-                        context.pause(node.getNodeId(), "common", SLEEP, sleepTime);
-                        logger.debug("设置延迟时间:{}ms", sleepTime);
-                        Thread.sleep(sleepTime);
+                    synchronized (node.getNodeId().intern()) {
+                        //实际等待时间 = 上次执行时间 + 睡眠时间 - 当前时间
+                        Long lastExecuteTime = context.get(LAST_EXECUTE_TIME + node.getNodeId(), 0L);
+                        if (lastExecuteTime != 0) {
+                            sleepTime = lastExecuteTime + sleepTime - System.currentTimeMillis();
+                        }
+                        if (sleepTime > 0) {
+                            context.pause(node.getNodeId(), "common", SLEEP, sleepTime);
+                            logger.debug("设置延迟时间:{}ms", sleepTime);
+                            Thread.sleep(sleepTime);
 //							this.wait(sleepTime);
 //							synchronized(this) {
 //								this.wait(sleepTime);
 //							}
+                        }
+                        context.put(LAST_EXECUTE_TIME + node.getNodeId(), System.currentTimeMillis());
                     }
-                    context.put(LAST_EXECUTE_TIME + node.getNodeId(), System.currentTimeMillis());
-//                    }
                 }
             } catch (Throwable t) {
                 logger.error("设置延迟时间失败", t);
@@ -353,7 +353,7 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                         } else {
                             request.data(parameterName, value);
                             context.pause(node.getNodeId(), "request-body", parameterName, value);
-							logger.info("设置请求参数：{}={}",parameterName,value);
+                            logger.info("设置请求参数：{}={}", parameterName, value);
                         }
 
                     } catch (Exception e) {
@@ -419,7 +419,7 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                     try {
                         value = ExpressionUtils.execute(headerValue, variables);
                         context.pause(node.getNodeId(), "request-header", headerName, value);
-						logger.info("设置请求Header：{}={}", headerName, value);
+                        logger.info("设置请求Header：{}={}", headerName, value);
                     } catch (Exception e) {
                         logger.error("设置请求Header：{}出错,异常信息：{}", headerName, e);
                     }

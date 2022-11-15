@@ -68,6 +68,7 @@ public class SpiderJobContext extends SpiderContext{
 		}
 		SpiderJobContext context = new SpiderJobContext(os, output);
 		context.setFlowId(id);
+		context.setTaskId(taskId);
 		return context;
 	}
 }
